@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
             if($mysqli)
             {
                 header("location: login.php");
+                exit;
             }
             else
             {
