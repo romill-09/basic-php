@@ -1,10 +1,28 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("location: login.php");
-    exit; // Add an exit to prevent further execution
-}
+     $mysqli = mysqli_connect("localhost", "root", "","movie");
+     if ($_SERVER['REQUEST_METHOD'] == "POST") 
+    {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+    
+        $query = "SELECT * FROM users WHERE username = '$username' and password = '$password'";
+        
+        $result = $mysqli->query($query);
+    
+        if($result->num_rows == 0)
+        {
+            echo "<script type='text/javascript'>alert('Incorrect username or password');</script>";
+        }
+        else
+        {
+            $row = $result->fetch_assoc();
+            session_start();
+            $_SESSION['username'] = $username;
+            $_SESSION['password'] = $password;
+            header("location:home.php");
+    
+        }
+    }
 ?>
 
 <!doctype html>
@@ -13,10 +31,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
     <title>PHP login system!</title>
 </head>
 <body>
@@ -27,33 +43,32 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="index.php">Register</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="login.php">Login</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="logout.php">Logout</a>
-            </li>
         </ul>
-
-        <div class="navbar-collapse collapse">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#"> <img src="https://img.icons8.com/metro/26/000000/guest-male.png"> <?php echo "Welcome ". $_SESSION['username']?></a>
-                </li>
-            </ul>
-        </div>
     </div>
 </nav>
 
 <div class="container mt-4">
-    <h3><?php echo "Welcome ". $_SESSION['username']?>! You can now use this website</h3>
-    <hr>
+    <h3>Please Login Here:</h3>
+    <?php if(!empty($err)): ?>
+    <div class="alert alert-danger" role="alert">
+        <?php echo $err; ?>
+    </div>
+    <?php endif; ?>
+    <form action="" method="post">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Username">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password">
+        </div>
+        <!-- Remove unnecessary checkbox -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </div>
 
 <!-- Optional JavaScript -->

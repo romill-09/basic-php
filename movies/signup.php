@@ -1,10 +1,9 @@
 <?php
-$mysqli = new mysqli("localhost", "root", "", "login");
+$mysqli = new mysqli("localhost", "root", "", "movie");
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") 
 {
     $username = $_POST['username'];
-    $email = $_POST['email'];
     $password = $_POST['password'];
     $cpassword = $_POST['cpassword'];
 
@@ -19,14 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         {
             echo "Username already exists";
         } 
-        else if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-        {
-            echo "Invalid email format";
-        }
-        else if (!preg_match('/@somaiya\.edu$/', $email))
-        {
-            echo "Email must be from @somaiya.edu domain";
-        }
+        // else if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+        // {
+        //     echo "Invalid email format";
+        // }
+        // else if (!preg_match('/@somaiya\.edu$/', $email))
+        // {
+        //     echo "Email must be from @somaiya.edu domain";
+        // }
         else if (empty(trim($password)))
         {
             echo "Password cannot be blank";
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
         else
         {
             $password = trim($password);
-            $mysqli->query("INSERT INTO users(username, email, password) VALUES ('$username', '$email', '$password');");
+            $mysqli->query("INSERT INTO users(username, password) VALUES ('$username', '$password');");
             if($mysqli)
             {
                 header("location: login.php");
